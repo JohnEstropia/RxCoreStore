@@ -1,0 +1,6 @@
+[submodule "Carthage/Checkouts/CoreStore"]
+	path = Carthage/Checkouts/CoreStore
+	url = https://github.com/JohnEstropia/CoreStore.git
+[submodule "Carthage/Checkouts/RxSwift"]
+	path = Carthage/Checkouts/RxSwift
+	url = https://github.com/ReactiveX/RxSwift.git

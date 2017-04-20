@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		B5A992111EA59F2B0091A2E3 /* RxCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A992101EA59F2B0091A2E3 /* RxCoreStore.swift */; };
-		B5A992131EA5A0D90091A2E3 /* RxDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A992121EA5A0D90091A2E3 /* RxDataStack.swift */; };
+		B5A992131EA5A0D90091A2E3 /* RxDataStack+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A992121EA5A0D90091A2E3 /* RxDataStack+Setup.swift */; };
 		B5A992151EA5B7720091A2E3 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A992141EA5B7720091A2E3 /* Functions.swift */; };
+		B5A992191EA74DD60091A2E3 /* RxDataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A992181EA74DD50091A2E3 /* RxDataStack+Transaction.swift */; };
+		B5A9921B1EA74EAE0091A2E3 /* RxDataStack+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921A1EA74EAE0091A2E3 /* RxDataStack+Observing.swift */; };
+		B5A9921D1EA74F770091A2E3 /* RxListMonitor+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921C1EA74F770091A2E3 /* RxListMonitor+Observing.swift */; };
 		B5D339451E920DAA00C880DE /* RxCoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3393B1E920DA900C880DE /* RxCoreStore.framework */; };
 		B5D3394A1E920DAA00C880DE /* RxCoreStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339491E920DAA00C880DE /* RxCoreStoreTests.swift */; };
 		B5D3394C1E920DAA00C880DE /* RxCoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = B5D3393E1E920DA900C880DE /* RxCoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -31,8 +34,11 @@
 
 /* Begin PBXFileReference section */
 		B5A992101EA59F2B0091A2E3 /* RxCoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxCoreStore.swift; sourceTree = "<group>"; };
-		B5A992121EA5A0D90091A2E3 /* RxDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxDataStack.swift; sourceTree = "<group>"; };
+		B5A992121EA5A0D90091A2E3 /* RxDataStack+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxDataStack+Setup.swift"; sourceTree = "<group>"; };
 		B5A992141EA5B7720091A2E3 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		B5A992181EA74DD50091A2E3 /* RxDataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxDataStack+Transaction.swift"; sourceTree = "<group>"; };
+		B5A9921A1EA74EAE0091A2E3 /* RxDataStack+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxDataStack+Observing.swift"; sourceTree = "<group>"; };
+		B5A9921C1EA74F770091A2E3 /* RxListMonitor+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxListMonitor+Observing.swift"; sourceTree = "<group>"; };
 		B5D3393B1E920DA900C880DE /* RxCoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxCoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5D3393E1E920DA900C880DE /* RxCoreStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RxCoreStore.h; sourceTree = "<group>"; };
 		B5D3393F1E920DA900C880DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -121,7 +127,10 @@
 				B5A9920F1EA59F150091A2E3 /* Supporting Files */,
 				B5D3393E1E920DA900C880DE /* RxCoreStore.h */,
 				B5A992101EA59F2B0091A2E3 /* RxCoreStore.swift */,
-				B5A992121EA5A0D90091A2E3 /* RxDataStack.swift */,
+				B5A992121EA5A0D90091A2E3 /* RxDataStack+Setup.swift */,
+				B5A992181EA74DD50091A2E3 /* RxDataStack+Transaction.swift */,
+				B5A9921A1EA74EAE0091A2E3 /* RxDataStack+Observing.swift */,
+				B5A9921C1EA74F770091A2E3 /* RxListMonitor+Observing.swift */,
 				B5A992161EA5B77B0091A2E3 /* Internal */,
 			);
 			path = Sources;
@@ -258,9 +267,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5A992131EA5A0D90091A2E3 /* RxDataStack.swift in Sources */,
+				B5A992131EA5A0D90091A2E3 /* RxDataStack+Setup.swift in Sources */,
 				B5A992111EA59F2B0091A2E3 /* RxCoreStore.swift in Sources */,
+				B5A9921B1EA74EAE0091A2E3 /* RxDataStack+Observing.swift in Sources */,
 				B5A992151EA5B7720091A2E3 /* Functions.swift in Sources */,
+				B5A9921D1EA74F770091A2E3 /* RxListMonitor+Observing.swift in Sources */,
+				B5A992191EA74DD60091A2E3 /* RxDataStack+Transaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

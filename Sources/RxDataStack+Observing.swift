@@ -1,5 +1,5 @@
 //
-//  RxCoreStore.swift
+//  RxDataStack+Observing.swift
 //  RxCoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,33 +27,29 @@ import CoreStore
 import RxSwift
 
 
-// MARK: - CoreStore
+// MARK: - Reactive
 
-public extension CoreStore {
+extension Reactive where Base == DataStack {
     
-    public static var rx: Reactive<DataStack> {
+    func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
         
-        get { return self.defaultStack.rx }
-        set { self.defaultStack.rx = newValue }
+        return self.monitorList(from, fetchClauses)
     }
-}
-
-
-// MARK: - DataStack
-
-extension DataStack: ReactiveCompatible {
     
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = DataStack
-}
-
-
-// MARK: - ListMonitor
-
-extension ListMonitor: ReactiveCompatible {
-    
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = ListMonitor
+    func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+        
+        return Observable<RxListChange<D>>
+            .create(
+                { (observable) in
+                    
+                    let monitor = self.base.monitorList(from, fetchClauses)
+                    let observer = RxAnonymousObserver(observable)
+                    monitor.addObserver(observer)
+                    return Disposables.create {
+                        
+                        monitor.removeObserver(observer)
+                    }
+                }
+        )
+    }
 }

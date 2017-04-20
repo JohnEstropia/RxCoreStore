@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.dependency "CoreStore", "0.0.1"
+    s.dependency "CoreStore", :git => "https://github.com/JohnEstropia/CoreStore.git", :branch => "corestore4_develop"
     s.dependency "RxSwift", "~> 3.3.0"
 end

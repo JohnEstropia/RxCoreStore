@@ -6,7 +6,10 @@
 //  Copyright © 2017 John Rommel Estropia. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import CoreData;
+@import CoreStore;
+@import RxSwift;
+
 
 //! Project version number for RxCoreStore.
 FOUNDATION_EXPORT double RxCoreStoreVersionNumber;

@@ -26,10 +26,28 @@ class Dog: Animal {
     let friends2 = Relationship.ToManyUnordered<Dog>("friends2", inverse: { $0.friends })
 }
 
-class Person: CoreStoreObject {
+class Person: CoreStoreObject, ImportableUniqueObject {
     
     let name = Value.Required<String>("name")
     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+    
+    typealias ImportSource = [String: String]
+    typealias UniqueIDType = String
+    
+    static var uniqueIDKeyPath: String {
+    
+        return self.keyPath { $0.name }
+    }
+    
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType? {
+        
+        return source["name"]
+    }
+    
+    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws {
+        
+        // ...
+    }
 }
 
 
@@ -101,15 +119,19 @@ class RxCoreStoreTests: XCTestCase {
             .subscribe(
                 onNext: { (change) in
                     
-                    switch change.changeType {
+                    switch change.tuple {
                         
-                    case .listDidChange:
-                        print("didChange")
+                    case (let monitor, .listDidChange):
+                        XCTAssertEqual(monitor.numberOfObjects(), 1)
                         changeExpectation.fulfill()
                         
                     default:
                         break
                     }
+                },
+                onError: { (error) in
+                    
+                    XCTFail(error.localizedDescription)
                 }
             )
             .addDisposableTo(self.disposeBag)
@@ -156,6 +178,33 @@ class RxCoreStoreTests: XCTestCase {
                     XCTAssertNotNil(validPerson?.pet.value)
                     
                     transactionExpectation.fulfill()
+                },
+                onError: { (error) in
+                    
+                    XCTFail(error.localizedDescription)
+                }
+            )
+            .addDisposableTo(self.disposeBag)
+        
+        let importExpectation = self.expectation(description: "import")
+        CoreStore.rx
+            .importUniqueObjects(
+                Into<Person>(),
+                sourceArray: [
+                    ["name": "John"],
+                    ["name": "Bob"],
+                    ["name": "Joe"]
+                ]
+            )
+            .subscribe(
+                onNext: { (people) in
+                    
+                    XCTAssertEqual(people.count, 3)
+                    importExpectation.fulfill()
+                },
+                onError: { (error) in
+                    
+                    XCTFail(error.localizedDescription)
                 }
             )
             .addDisposableTo(self.disposeBag)

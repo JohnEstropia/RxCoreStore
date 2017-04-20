@@ -36,6 +36,10 @@ public protocol RxListMonitorType {
 extension ListMonitor: RxListMonitorType {
     
 }
+//
+//extension ListMonitor: ObservableType {
+//    
+//}
 
 public protocol _RxListChangeType {
     
@@ -105,6 +109,11 @@ public struct RxListChange<D: DynamicObject>: _RxListChangeType {
     
     public let monitor: ListMonitor<D>
     public let changeType: ChangeType
+    
+    public var tuple: (ListMonitor<D>, ChangeType) {
+        
+        return (self.monitor, self.changeType)
+    }
     
     
     // MARK: _RxListChangeType

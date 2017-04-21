@@ -200,6 +200,7 @@ class RxCoreStoreTests: XCTestCase {
                 onNext: { (people) in
                     
                     XCTAssertEqual(people.count, 3)
+                    XCTAssertEqual(Set(people.map({ $0.name.value })), Set(["John", "Bob", "Joe"]))
                     importExpectation.fulfill()
                 },
                 onError: { (error) in

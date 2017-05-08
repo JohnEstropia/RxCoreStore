@@ -31,6 +31,9 @@ import RxSwift
 
 public extension CoreStore {
     
+    /**
+     Reactive extensions for the `defaultStack`. 
+     */
     public static var rx: Reactive<DataStack> {
         
         get { return self.defaultStack.rx }

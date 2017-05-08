@@ -32,48 +32,41 @@ public protocol RxListMonitorType {
     associatedtype ObjectType: DynamicObject
 }
 
+extension ListMonitor: RxListMonitorType {}
 
-extension ListMonitor: RxListMonitorType {
+
+// MARK: - ListMonitor
+
+extension ListMonitor: ObservableConvertibleType {
     
+    // MARK: ObservableConvertibleType
+    
+    public typealias E = RxListChange<D>
+    
+    public func asObservable() -> Observable<RxListChange<D>> {
+        
+        return Observable<RxListChange<D>>
+            .create(
+                { (observable) in
+                    
+                    let observer = RxAnonymousObserver(observable)
+                    self.addObserver(observer)
+                    return Disposables.create {
+                        
+                        self.removeObserver(observer)
+                    }
+                }
+            )
+    }
 }
-//
-//extension ListMonitor: ObservableType {
-//    
-//}
 
-public protocol _RxListChangeType {
+
+public protocol RxListChangeType {
     
     associatedtype ObjectType: DynamicObject
     
     var monitor: ListMonitor<ObjectType> { get }
     var changeType: RxListChange<ObjectType>.ChangeType { get }
-}
-
-extension _RxListChangeType {
-    
-//    public typealias ListChangeType = RxListChangeType<ListMonitorType.ObjectType>
-//    
-//    public func map<T>(
-//        listChange: (_ monitor: ListMonitorType, _ change: ListChangeType.ListChange) -> T,
-//        objectChange: (_ monitor: ListMonitorType, _ change: ListChangeType.ObjectChange) -> T,
-//        sectionChange: (_ monitor: ListMonitorType, _ change: ListChangeType.SectionChange) -> T) -> T {
-//        
-//        let monitor = self.monitor
-//        switch self.change {
-//            
-//        case let change as ListChangeType.ListChange:
-//            return listChange(monitor, change)
-//            
-//        case let change as ListChangeType.ObjectChange:
-//            return objectChange(monitor, change)
-//            
-//        case let change as ListChangeType.SectionChange:
-//            return sectionChange(monitor, change)
-//            
-//        default:
-//            fatalError()
-//        }
-//    }
 }
 
 
@@ -84,7 +77,7 @@ public protocol RxAnyListChange {}
 
 // MARK: - RxListChange
 
-public struct RxListChange<D: DynamicObject>: _RxListChangeType {
+public struct RxListChange<D: DynamicObject>: RxListChangeType {
     
     // MARK: - ChangeType
     
@@ -110,13 +103,13 @@ public struct RxListChange<D: DynamicObject>: _RxListChangeType {
     public let monitor: ListMonitor<D>
     public let changeType: ChangeType
     
-    public var tuple: (ListMonitor<D>, ChangeType) {
+    public var tuple: (monitor: ListMonitor<D>, changeType: ChangeType) {
         
         return (self.monitor, self.changeType)
     }
     
     
-    // MARK: _RxListChangeType
+    // MARK: RxListChangeType
     
     public typealias ObjectType = D
     
@@ -131,34 +124,132 @@ public struct RxListChange<D: DynamicObject>: _RxListChangeType {
 }
 
 
-// MARK: - Reactive
-
-extension Reactive where Base: _RxListChangeType {
-    
-}
-
-
 // MARK: - ObservableType
 
-extension ObservableType where E: _RxListChangeType {
+extension ObservableType where E: RxListChangeType {
     
-//    public typealias ListMonitorType = ListMonitor<E.ObjectType>
-//    public typealias ListChangeType = RxListChange<E.ObjectType>.ChangeType
-//    
-//    public func filterListChanges() -> Observable<(monitor: ListMonitorType, change: ListChangeType)> {
-//        
-//        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, change: ListChangeType.ListChange)> in
-//            
-//            switch listChange.change {
-//                
-//            case let change as ListChangeType.ListChange:
-//                return .just((monitor: listChange.monitor, change: change))
-//                
-//            default:
-//                return .empty()
-//            }
-//        }
-//    }
+    public typealias ListMonitorType = ListMonitor<E.ObjectType>
+    public typealias ListChangeType = RxListChange<E.ObjectType>.ChangeType
+    
+    public func filterListWillChange() -> Observable<ListMonitorType> {
+        
+        return self.flatMap { (listChange) -> Observable<ListMonitorType> in
+            
+            if case .listWillChange = listChange.changeType {
+                
+                return .just(listChange.monitor)
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterListDidChange() -> Observable<ListMonitorType> {
+        
+        return self.flatMap { (listChange) -> Observable<ListMonitorType> in
+            
+            if case .listDidChange = listChange.changeType {
+                
+                return .just(listChange.monitor)
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterListWillRefetch() -> Observable<ListMonitorType> {
+        
+        return self.flatMap { (listChange) -> Observable<ListMonitorType> in
+            
+            if case .listWillRefetch = listChange.changeType {
+                
+                return .just(listChange.monitor)
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterListDidRefetch() -> Observable<ListMonitorType> {
+        
+        return self.flatMap { (listChange) -> Observable<ListMonitorType> in
+            
+            if case .listDidRefetch = listChange.changeType {
+                
+                return .just(listChange.monitor)
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterObjectInserted() -> Observable<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> in
+            
+            if case .objectInserted(let object, let indexPath) = listChange.changeType {
+                
+                return .just((listChange.monitor, object, indexPath))
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterObjectDeleted() -> Observable<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> in
+            
+            if case .objectDeleted(let object, let indexPath) = listChange.changeType {
+                
+                return .just((listChange.monitor, object, indexPath))
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterObjectUpdated() -> Observable<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> in
+            
+            if case .objectUpdated(let object, let indexPath) = listChange.changeType {
+                
+                return .just((listChange.monitor, object, indexPath))
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterObjectMoved() -> Observable<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> in
+            
+            if case .objectMoved(let object, let fromIndexPath, let toIndexPath) = listChange.changeType {
+                
+                return .just((listChange.monitor, object, fromIndexPath, toIndexPath))
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterSectionInserted() -> Observable<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> in
+            
+            if case .sectionInserted(let section, let sectionIndex) = listChange.changeType {
+                
+                return .just((listChange.monitor, section, sectionIndex))
+            }
+            return .empty()
+        }
+    }
+    
+    public func filterSectionDeleted() -> Observable<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> {
+        
+        return self.flatMap { (listChange) -> Observable<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> in
+            
+            if case .sectionDeleted(let section, let sectionIndex) = listChange.changeType {
+                
+                return .just((listChange.monitor, section, sectionIndex))
+            }
+            return .empty()
+        }
+    }
 }
 
 

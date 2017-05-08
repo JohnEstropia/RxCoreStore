@@ -95,7 +95,7 @@ class RxCoreStoreTests: XCTestCase {
             .subscribe(
                 onNext: { (progress) in
                     
-                    print("======= Progress: \(progress.progress)")
+                    print("======= Progress: \(progress.fractionCompleted * 100) %")
                 },
                 onError: { (error) in
                     

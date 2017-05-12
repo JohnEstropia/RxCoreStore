@@ -49,6 +49,10 @@ let package = Package(
         .Package(
             url: "https://github.com/ReactiveX/RxSwift.git",
             "3.3.1"
+        ),
+        .Package(
+            url: "https://github.com/ReactiveX/RxCocoa.git",
+            "3.3.1"
         )
     ],
     exclude: ["Carthage", "RxCoreStoreDemo", "Sources/libA/images"]

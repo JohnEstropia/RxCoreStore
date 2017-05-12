@@ -17,5 +17,6 @@ Pod::Spec.new do |s|
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
     s.dependency "CoreStore", "4.0.0-beta"
+    s.dependency "RxCocoa", "~> 3.4"
     s.dependency "RxSwift", "~> 3.4"
 end

@@ -23,7 +23,7 @@ class Dog: Animal {
     let nickname = Value.Optional<String>("nickname")
     let age = Value.Required<Int>("age", default: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
-    let friends2 = Relationship.ToManyUnordered<Dog>("friends2", inverse: { $0.friends })
+    let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
 
 class Person: CoreStoreObject, ImportableUniqueObject {
@@ -55,16 +55,6 @@ class RxCoreStoreTests: XCTestCase {
     
     let disposeBag = DisposeBag()
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
     func testExample() {
         
         CoreStore.defaultStack = DataStack(
@@ -77,7 +67,7 @@ class RxCoreStoreTests: XCTestCase {
                 ],
                 versionLock: [
                     "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
-                    "Dog": [0x5285f8e3aff69199, 0x62c3291b59f2ec7c, 0xbe5a571397a4117b, 0x97fb40f5b79ffbdc],
+                    "Dog": [0x312e29f63a693638, 0x67b48196ec0cbce3, 0x755e1eb00c29e723, 0xd86e2481e3d56bc1],
                     "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
                 ]
             )

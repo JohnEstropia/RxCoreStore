@@ -18,5 +18,4 @@ Pod::Spec.new do |s|
     s.requires_arc = true
     s.dependency "CoreStore", "~> 4.0"
     s.dependency "RxSwift", "~> 3.4"
-    s.dependency "RxDataSources", "~> 1.0.0"
 end

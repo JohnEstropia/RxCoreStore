@@ -109,5 +109,13 @@ extension Reactive where Base == DataStack {
         return self.base.monitorList(from, fetchClauses).asObservable()
     }
     
-    // TODO: sectioned list
+    func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+        
+        return self.monitorSectionedList(from, sectionBy, fetchClauses)
+    }
+    
+    func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+        
+        return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asObservable()
+    }
 }

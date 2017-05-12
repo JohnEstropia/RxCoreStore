@@ -1,3 +1,2 @@
 github "JohnEstropia/CoreStore" "corestore4_develop"
 github "ReactiveX/RxSwift"
-github "ReactiveX/RxCocoa"

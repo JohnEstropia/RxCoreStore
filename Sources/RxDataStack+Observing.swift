@@ -29,7 +29,7 @@ import RxSwift
 
 // MARK: - Reactive
 
-extension Reactive where Base == DataStack {
+public extension Reactive where Base == DataStack {
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
@@ -65,7 +65,7 @@ extension Reactive where Base == DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      */
-    func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+    public func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -104,17 +104,17 @@ extension Reactive where Base == DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      */
-    func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+    public func monitorList<D: DynamicObject>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
         
         return self.base.monitorList(from, fetchClauses).asObservable()
     }
     
-    func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
     
-    func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D: DynamicObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
         
         return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asObservable()
     }

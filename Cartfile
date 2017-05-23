@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" "corestore4_develop"
+github "JohnEstropia/CoreStore" "develop"
 github "ReactiveX/RxSwift"

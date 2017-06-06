@@ -1,5 +1,5 @@
 //
-//  RxCoreStore.swift
+//  RxDynamicObject.swift
 //  RxCoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,56 +27,40 @@ import CoreStore
 import RxSwift
 
 
-// MARK: - CoreStore
+// MARK: - Reactive
 
-public extension CoreStore {
+public extension Reactive where Base: NSManagedObject {
     
-    /**
-     Reactive extensions for the `defaultStack`. 
-     */
-    public static var rx: Reactive<DataStack> {
+    public func monitorObject() -> Observable<RxObjectChange<Base>> {
         
-        get { return self.defaultStack.rx }
-        set { self.defaultStack.rx = newValue }
+        switch self.base.fetchSource() {
+            
+        case let dataStack as DataStack:
+            return dataStack.monitorObject(self.base).asObservable()
+            
+        case let transaction as UnsafeDataTransaction:
+            return transaction.monitorObject(self.base).asObservable()
+            
+        default:
+            return .empty()
+        }
     }
 }
 
-
-// MARK: - DataStack
-
-extension DataStack: ReactiveCompatible {
+public extension Reactive where Base: CoreStoreObject {
     
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = DataStack
-}
-
-
-// MARK: - ListMonitor
-
-extension ListMonitor: ReactiveCompatible {
-    
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = ListMonitor
-}
-
-
-// MARK: - ObjectMonitor
-
-extension ObjectMonitor: ReactiveCompatible {
-    
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = ObjectMonitor
-}
-
-
-// MARK: - CoreStoreObject
-
-extension CoreStoreObject: ReactiveCompatible {
-    
-    // MARK: ReactiveCompatible
-    
-    public typealias CompatibleType = CoreStoreObject
+    public func monitorObject() -> Observable<RxObjectChange<Base>> {
+        
+        switch self.base.fetchSource() {
+            
+        case let dataStack as DataStack:
+            return dataStack.monitorObject(self.base).asObservable()
+            
+        case let transaction as UnsafeDataTransaction:
+            return transaction.monitorObject(self.base).asObservable()
+            
+        default:
+            return .empty()
+        }
+    }
 }

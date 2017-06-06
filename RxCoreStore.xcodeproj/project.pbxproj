@@ -19,6 +19,8 @@
 		B5D3399B1E9226E700C880DE /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3399A1E9226E700C880DE /* RxSwift.framework */; };
 		B5D3399D1E9226F400C880DE /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3399C1E9226F400C880DE /* RxCocoa.framework */; };
 		B5D3399F1E9226FB00C880DE /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3399E1E9226FB00C880DE /* RxBlocking.framework */; };
+		B5E377701EE685CE00434A93 /* RxObjectMonitor+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E3776F1EE685CE00434A93 /* RxObjectMonitor+Observing.swift */; };
+		B5E377721EE68B1B00434A93 /* RxDynamicObject+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E377711EE68B1B00434A93 /* RxDynamicObject+Observing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		B5D339A31E92370A00C880DE /* RxCoreStore.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RxCoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5D339A41E92370A00C880DE /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		B5D339AA1E92373600C880DE /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
+		B5E3776F1EE685CE00434A93 /* RxObjectMonitor+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxObjectMonitor+Observing.swift"; sourceTree = "<group>"; };
+		B5E377711EE68B1B00434A93 /* RxDynamicObject+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RxDynamicObject+Observing.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 				B5A992181EA74DD50091A2E3 /* RxDataStack+Transaction.swift */,
 				B5A9921A1EA74EAE0091A2E3 /* RxDataStack+Observing.swift */,
 				B5A9921C1EA74F770091A2E3 /* RxListMonitor+Observing.swift */,
+				B5E377711EE68B1B00434A93 /* RxDynamicObject+Observing.swift */,
+				B5E3776F1EE685CE00434A93 /* RxObjectMonitor+Observing.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -257,6 +263,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A992131EA5A0D90091A2E3 /* RxDataStack+Setup.swift in Sources */,
+				B5E377701EE685CE00434A93 /* RxObjectMonitor+Observing.swift in Sources */,
+				B5E377721EE68B1B00434A93 /* RxDynamicObject+Observing.swift in Sources */,
 				B5A992111EA59F2B0091A2E3 /* RxCoreStore.swift in Sources */,
 				B5A9921B1EA74EAE0091A2E3 /* RxDataStack+Observing.swift in Sources */,
 				B5A9921D1EA74F770091A2E3 /* RxListMonitor+Observing.swift in Sources */,

@@ -84,7 +84,7 @@ public struct RxObjectChange<D: DynamicObject>: RxObjectChangeType {
     public enum ChangeType {
         
         case objectWillUpdate(object: D)
-        case objectDidUpdate(object: D, changedPersistentKeys: Set<KeyPath>)
+        case objectDidUpdate(object: D, changedPersistentKeys: Set<RawKeyPath>)
         case objectDeleted
     }
     
@@ -134,9 +134,9 @@ extension ObservableType where E: RxObjectChangeType {
         }
     }
     
-    public func filterObjectDidUpdate() -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<KeyPath>)> {
+    public func filterObjectDidUpdate() -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<RawKeyPath>)> {
         
-        return self.flatMap { (objectChange) -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<KeyPath>)> in
+        return self.flatMap { (objectChange) -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<RawKeyPath>)> in
             
             if case .objectDidUpdate(let object, let changedPersistentKeys) = objectChange.changeType {
                 
@@ -152,7 +152,7 @@ extension ObservableType where E: RxObjectChangeType {
             
             if case .objectDeleted = objectChange.changeType {
                 
-                return .just()
+                return .just(())
             }
             return .empty()
         }
@@ -183,7 +183,7 @@ internal final class RxAnonymousObjectObserver<D: DynamicObject>: ObjectObserver
         )
     }
     
-    internal func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>) {
+    internal func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<RawKeyPath>) {
         
         self.observable.onNext(
             ObjectChangeType(

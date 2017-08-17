@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" >= 4.0.0
-github "ReactiveX/RxSwift" >= 3.4.0
+github "JohnEstropia/CoreStore" "prototype/Swift_4_0"
+github "ReactiveX/RxSwift" "swift4.0"

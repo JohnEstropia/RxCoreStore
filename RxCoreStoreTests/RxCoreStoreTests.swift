@@ -21,14 +21,14 @@ class Animal: CoreStoreObject {
 class Dog: Animal {
     
     let nickname = Value.Optional<String>("nickname")
-    let age = Value.Required<Int>("age", default: 1)
+    let age = Value.Required<Int>("age", initial: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
     let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
 
 class Person: CoreStoreObject, ImportableUniqueObject {
     
-    let name = Value.Required<String>("name")
+    let name = Value.Required<String>("name", initial: "")
     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
     
     typealias ImportSource = [String: String]

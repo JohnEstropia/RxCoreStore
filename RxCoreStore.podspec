@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "RxCoreStore"
-    s.version = "0.0.1-alpha4"
+    s.version = "0.0.1-alpha5"
     s.license = "MIT"
     s.summary = "RxSwift extensions for CoreStore"
     s.homepage = "https://github.com/JohnEstropia/RxCoreStore"

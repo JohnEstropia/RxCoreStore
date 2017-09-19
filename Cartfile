@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" "prototype/Swift_4_0"
+github "JohnEstropia/CoreStore" "prototype/queryBuilders"
 github "ReactiveX/RxSwift" "swift4.0"

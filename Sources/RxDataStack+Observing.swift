@@ -145,7 +145,7 @@ public extension Reactive where Base == DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -186,7 +186,7 @@ public extension Reactive where Base == DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
         
         return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asObservable()
     }

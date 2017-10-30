@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" "prototype/queryBuilders"
-github "ReactiveX/RxSwift" "rxswift4.0-swift4.0"
+github "JohnEstropia/CoreStore" "prototype/Swift_4_0"
+github "ReactiveX/RxSwift" >= 3.6.0

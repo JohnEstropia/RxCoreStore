@@ -101,8 +101,8 @@ class RxCoreStoreTests: XCTestCase {
         let changeExpectation = self.expectation(description: "change")
         let monitor = CoreStore.rx
             .monitorList(
-                From<Dog>(),
-                OrderBy(.ascending(Dog.keyPath({ $0.nickname })))
+                From<Dog>()
+                    .orderBy(.ascending(\.nickname))
             )
             .share()
         monitor

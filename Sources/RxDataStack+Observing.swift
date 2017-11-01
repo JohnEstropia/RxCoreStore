@@ -110,6 +110,41 @@ public extension Reactive where Base == DataStack {
     }
     
     /**
+     Reactive extension for `CoreStore.DataStack`'s `monitorList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
+     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     ```
+     let listObserver = dataStack.rx
+         .monitorList(From<Person>().where(\.age >= 30))
+         .share()
+     
+     listObserver.
+         .subscribe(
+             onNext: { (change) in
+                 if case .listDidChange = change.changeType {
+                     tableView.reloadData()
+                 }
+             }
+         )
+         .addDisposableTo(disposeBag)
+     
+     listObserver.
+         .filterListDidChange()
+         .subscribe(
+             onNext: { _ in
+                 tableView.reloadData()
+             }
+         )
+         .addDisposableTo(disposeBag)
+     ```
+     - parameter clauseChain: a fetch chain created from a `From` clause.
+     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     */
+    public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> Observable<RxListChange<B.ObjectType>>{
+        
+        return self.monitorList(clauseChain.from, clauseChain.fetchClauses)
+    }
+    
+    /**
      Reactive extension for `CoreStore.DataStack`'s `monitorSectionedList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
      - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
@@ -189,5 +224,48 @@ public extension Reactive where Base == DataStack {
     public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
         
         return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asObservable()
+    }
+    
+    /**
+     Reactive extension for `CoreStore.DataStack`'s `monitorSectionedList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
+     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     ```
+     let listObserver = dataStack.rx
+         .monitorSectionedList(
+             From<Person>()
+                 .sectionBy(\.age),
+             .   .where(\.age >= 30)
+         )
+         .share()
+     
+     listObserver.
+         .subscribe(
+             onNext: { (change) in
+                 if case .listDidChange = change.changeType {
+                     tableView.reloadData()
+                 }
+             }
+         )
+         .addDisposableTo(disposeBag)
+     
+     listObserver.
+         .filterListDidChange()
+         .subscribe(
+             onNext: { _ in
+                 tableView.reloadData()
+             }
+         )
+         .addDisposableTo(disposeBag)
+     ```
+     - parameter clauseChain: a fetch chain created from a `From` clause.
+     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     */
+    public func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> Observable<RxListChange<B.ObjectType>> {
+        
+        return self.monitorSectionedList(
+            clauseChain.from,
+            clauseChain.sectionBy,
+            clauseChain.fetchClauses
+        )
     }
 }

@@ -1,45 +1,21 @@
 language: objective-c
-osx_image: xcode8.3
-sudo: false
-git:
-  submodules: false
-notifications:
-  email: false
+osx_image: xcode9.3
 env:
   global:
   - LC_CTYPE=en_US.UTF-8
   - LANG=en_US.UTF-8
 matrix:
-    - DESTINATION="OS=10.3,name=iPhone 7"          SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=10.1,name=iPhone 7"          SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.4,name=iPhone 6"           SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 5S"          SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 5"           SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 4S"          SCHEME="RxCoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="arch=x86_64"                    SCHEME="RxCoreStore OSX"     SDK=macosx10.12          RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=3.2,name=Apple Watch - 42mm" SCHEME="RxCoreStore watchOS" SDK=watchsimulator3.2    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=2.2,name=Apple Watch - 42mm" SCHEME="RxCoreStore watchOS" SDK=watchsimulator3.2    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=10.2,name=Apple TV 1080p"    SCHEME="RxCoreStore tvOS"    SDK=appletvsimulator10.2 RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=9.2,name=Apple TV 1080p"     SCHEME="RxCoreStore tvOS"    SDK=appletvsimulator10.2 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=11.3,name=iPhone X"          SCHEME="RxCoreStore iOS"     SDK=iphonesimulator11.3  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.3.1,name=iPhone X"        SCHEME="RxCoreStore iOS"     SDK=iphonesimulator11.3  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="RxCoreStore iOS"     SDK=iphonesimulator11.3  RUN_TESTS="YES" POD_LINT="NO"
 before_install:
   - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
   - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-  - curl -OlL "https://github.com/Carthage/Carthage/releases/download/0.20.1/Carthage.pkg"
-  - sudo installer -pkg "Carthage.pkg" -target /
-  - rm "Carthage.pkg"
+  - brew update
+  - brew outdated carthage || brew upgrade carthage
 before_script:
-  - carthage update --use-submodules
+  - carthage bootstrap
 script:
-  - set -o pipefail
   - xcodebuild -version
   - xcodebuild -showsdks
-  - if [ $RUN_TESTS == "YES" ]; then 
-      xcodebuild -workspace RxCoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-      xcodebuild -workspace RxCoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-    fi
-  - xcodebuild -workspace "RxCoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.3" -destination "OS=10.3,name=iPhone 7" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-  - xcodebuild -workspace "RxCoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.3" -destination "OS=10.3,name=iPhone 7" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-  - if [ $POD_LINT == "YES" ]; then
-      pod lib lint --quick;
-    fi
+- carthage build --no-skip-current

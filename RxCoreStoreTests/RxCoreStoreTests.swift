@@ -14,7 +14,7 @@ import XCTest
 
 class Animal: CoreStoreObject {
     
-    let species = Value.Required<String>("species", default: "Swift")
+    let species = Value.Required<String>("species", initial: "Swift")
     let master = Relationship.ToOne<Person>("master")
 }
 
@@ -34,10 +34,7 @@ class Person: CoreStoreObject, ImportableUniqueObject {
     typealias ImportSource = [String: String]
     typealias UniqueIDType = String
     
-    static var uniqueIDKeyPath: String {
-    
-        return self.keyPath { $0.name }
-    }
+    static let uniqueIDKeyPath = String(keyPath: \Person.name)
     
     static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType? {
         
@@ -96,7 +93,7 @@ class RxCoreStoreTests: XCTestCase {
                     setupExpectation.fulfill()
                 }
             )
-            .addDisposableTo(self.disposeBag)
+            .disposed(by: self.disposeBag)
         
         let changeExpectation = self.expectation(description: "change")
         let monitor = CoreStore.rx
@@ -124,7 +121,7 @@ class RxCoreStoreTests: XCTestCase {
                     XCTFail(error.localizedDescription)
                 }
             )
-            .addDisposableTo(self.disposeBag)
+            .disposed(by: self.disposeBag)
         
         let transactionExpectation = self.expectation(description: "transaction")
         CoreStore.rx
@@ -174,7 +171,7 @@ class RxCoreStoreTests: XCTestCase {
                     XCTFail(error.localizedDescription)
                 }
             )
-            .addDisposableTo(self.disposeBag)
+            .disposed(by: self.disposeBag)
         
         let importExpectation = self.expectation(description: "import")
         CoreStore.rx
@@ -198,7 +195,7 @@ class RxCoreStoreTests: XCTestCase {
                     XCTFail(error.localizedDescription)
                 }
             )
-            .addDisposableTo(self.disposeBag)
+            .disposed(by: self.disposeBag)
         
         self.waitForExpectations(timeout: 10, handler: nil)
     }

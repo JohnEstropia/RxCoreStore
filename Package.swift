@@ -44,11 +44,11 @@ let package = Package(
     dependencies: [
         .Package(
             url: "https://github.com/JohnEstropia/CoreStore.git",
-            "4.0.0"
+            "5.3.0"
         ),
         .Package(
             url: "https://github.com/ReactiveX/RxSwift.git",
-            "3.3.1"
+            "4.1.0"
         )
     ],
     exclude: ["Carthage", "RxCoreStoreDemo", "Sources/libA/images"]

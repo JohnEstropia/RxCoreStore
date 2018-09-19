@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" "0430f662409767ba90483efebb28462633b065ac"
-github "ReactiveX/RxSwift" "4.0.0"
+github "JohnEstropia/CoreStore" "5.3.0"
+github "ReactiveX/RxSwift" "4.3.0"

@@ -1,2 +1,2 @@
-github "JohnEstropia/CoreStore" >= 5.3.0
+github "JohnEstropia/CoreStore" "develop"
 github "ReactiveX/RxSwift" >= 4.1.0

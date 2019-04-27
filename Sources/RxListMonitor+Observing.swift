@@ -129,16 +129,16 @@ public struct RxListChange<D: DynamicObject>: RxListChangeType {
 }
 
 
-// MARK: - SharedSequence where Trait == SingleTrait, Element: RxListChangeType
+// MARK: - SharedSequence where S == SignalSharingStrategy, Element: RxListChangeType
 
-extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
+extension SharedSequence where S == SignalSharingStrategy, Element: RxListChangeType {
     
     public typealias ListMonitorType = ListMonitor<Element.ObjectType>
     public typealias ListChangeType = RxListChange<Element.ObjectType>.ChangeType
     
-    public func filterListWillChange() -> Single<ListMonitorType> {
+    public func filterListWillChange() -> Signal<ListMonitorType> {
         
-        return self.flatMap { (listChange) -> Single<ListMonitorType> in
+        return self.flatMap { (listChange) -> Signal<ListMonitorType> in
             
             if case .listWillChange = listChange.changeType {
                 
@@ -148,9 +148,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterListDidChange() -> Single<ListMonitorType> {
+    public func filterListDidChange() -> Signal<ListMonitorType> {
         
-        return self.flatMap { (listChange) -> Single<ListMonitorType> in
+        return self.flatMap { (listChange) -> Signal<ListMonitorType> in
             
             if case .listDidChange = listChange.changeType {
                 
@@ -160,9 +160,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterListWillRefetch() -> Single<ListMonitorType> {
+    public func filterListWillRefetch() -> Signal<ListMonitorType> {
         
-        return self.flatMap { (listChange) -> Single<ListMonitorType> in
+        return self.flatMap { (listChange) -> Signal<ListMonitorType> in
             
             if case .listWillRefetch = listChange.changeType {
                 
@@ -172,9 +172,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterListDidRefetch() -> Single<ListMonitorType> {
+    public func filterListDidRefetch() -> Signal<ListMonitorType> {
         
-        return self.flatMap { (listChange) -> Single<ListMonitorType> in
+        return self.flatMap { (listChange) -> Signal<ListMonitorType> in
             
             if case .listDidRefetch = listChange.changeType {
                 
@@ -184,9 +184,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterObjectInserted() -> Single<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> {
+    public func filterObjectInserted() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> in
             
             if case .objectInserted(let object, let indexPath) = listChange.changeType {
                 
@@ -196,9 +196,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterObjectDeleted() -> Single<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> {
+    public func filterObjectDeleted() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> in
             
             if case .objectDeleted(let object, let indexPath) = listChange.changeType {
                 
@@ -208,9 +208,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterObjectUpdated() -> Single<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> {
+    public func filterObjectUpdated() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> in
             
             if case .objectUpdated(let object, let indexPath) = listChange.changeType {
                 
@@ -220,9 +220,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterObjectMoved() -> Single<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> {
+    public func filterObjectMoved() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> in
             
             if case .objectMoved(let object, let fromIndexPath, let toIndexPath) = listChange.changeType {
                 
@@ -232,9 +232,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterSectionInserted() -> Single<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> {
+    public func filterSectionInserted() -> Signal<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, toSectionIndex: Int)> in
             
             if case .sectionInserted(let section, let sectionIndex) = listChange.changeType {
                 
@@ -244,9 +244,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxListChangeType {
         }
     }
     
-    public func filterSectionDeleted() -> Single<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> {
+    public func filterSectionDeleted() -> Signal<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> {
         
-        return self.flatMap { (listChange) -> Single<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, section: NSFetchedResultsSectionInfo, fromSectionIndex: Int)> in
             
             if case .sectionDeleted(let section, let sectionIndex) = listChange.changeType {
                 

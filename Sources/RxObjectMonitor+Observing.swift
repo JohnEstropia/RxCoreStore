@@ -24,6 +24,7 @@
 //
 
 import CoreStore
+import RxCocoa
 import RxSwift
 
 
@@ -119,16 +120,16 @@ public struct RxObjectChange<D: DynamicObject>: RxObjectChangeType {
 }
 
 
-// MARK: - SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType
+// MARK: - SharedSequence where S == SignalSharingStrategy, Element: RxObjectChangeType
 
-extension SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType {
+extension SharedSequence where S == SignalSharingStrategy, Element: RxObjectChangeType {
     
     public typealias ObjectMonitorType = ObjectMonitor<E.ObjectType>
     public typealias ObjectChangeType = RxObjectChange<E.ObjectType>.ChangeType
     
-    public func filterObjectWillUpdate() -> Single<E.ObjectType> {
+    public func filterObjectWillUpdate() -> Signal<E.ObjectType> {
         
-        return self.flatMap { (objectChange) -> Single<E.ObjectType> in
+        return self.flatMap { (objectChange) -> Signal<E.ObjectType> in
             
             if case .objectWillUpdate(let object) = objectChange.changeType {
                 
@@ -138,9 +139,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType
         }
     }
     
-    public func filterObjectDidUpdate() -> Single<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
+    public func filterObjectDidUpdate() -> Signal<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
         
-        return self.flatMap { (objectChange) -> Single<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
+        return self.flatMap { (objectChange) -> Signal<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
             
             if case .objectDidUpdate(let object, let changedPersistentKeys) = objectChange.changeType {
                 
@@ -150,9 +151,9 @@ extension SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType
         }
     }
     
-    public func filterObjectDeleted() -> Single<Void> {
+    public func filterObjectDeleted() -> Signal<Void> {
         
-        return self.flatMap { (objectChange) -> Single<Void> in
+        return self.flatMap { (objectChange) -> Signal<Void> in
             
             if case .objectDeleted = objectChange.changeType {
                 

@@ -119,9 +119,9 @@ public struct RxObjectChange<D: DynamicObject>: RxObjectChangeType {
 }
 
 
-// MARK: - PrimitiveSequence where Trait == SingleTrait, Element: RxObjectChangeType
+// MARK: - SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType
 
-extension PrimitiveSequence where Trait == SingleTrait, Element: RxObjectChangeType {
+extension SharedSequence where Trait == SingleTrait, Element: RxObjectChangeType {
     
     public typealias ObjectMonitorType = ObjectMonitor<E.ObjectType>
     public typealias ObjectChangeType = RxObjectChange<E.ObjectType>.ChangeType

@@ -40,7 +40,7 @@ extension Reactive where Base == DataStack {
              source: ["name": "John"]
          )
          .subscribe(
-             onNext: { (person) in
+             onSuccess: { (person) in
                  XCTAssertNotNil(person)
                  // ...
              },
@@ -48,16 +48,16 @@ extension Reactive where Base == DataStack {
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - returns: An `Observable` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
+     - returns: A `Single` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
      */
-    public func importObject<T: DynamicObject & ImportableObject>(_ into: Into<T>, source: T.ImportSource) -> Observable<T?> {
+    public func importObject<T: DynamicObject & ImportableObject>(_ into: Into<T>, source: T.ImportSource) -> Single<T?> {
         
-        return Observable<T?>.create(
-            { (observable) -> Disposable in
+        return Single<T?>.create(
+            subscribe: { (observable) -> Disposable in
                 
                 self.base.perform(
                     asynchronous: { (transaction) -> T? in
@@ -69,12 +69,11 @@ extension Reactive where Base == DataStack {
                     },
                     success: { (object) in
                         
-                        observable.onNext(object.flatMap(self.base.fetchExisting))
-                        observable.onCompleted()
+                        observable(.success(object.flatMap(self.base.fetchExisting)))
                     },
                     failure: { (error) in
                         
-                        observable.onError(error)
+                        observable(.error(error))
                     }
                 )
                 return Disposables.create()
@@ -100,16 +99,16 @@ extension Reactive where Base == DataStack {
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter object: the object to update
      - parameter source: the object to import values from
-     - returns: An `Observable` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
+     - returns: A `Single` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
      */
-    public func importObject<T: DynamicObject & ImportableObject>(_ object: T, source: T.ImportSource) -> Observable<T?> {
+    public func importObject<T: DynamicObject & ImportableObject>(_ object: T, source: T.ImportSource) -> Single<T?> {
         
-        return Observable<T?>.create(
-            { (observable) -> Disposable in
+        return Single<T?>.create(
+            subscribe: { (observable) -> Disposable in
                 
                 self.base.perform(
                     asynchronous: { (transaction) -> T? in
@@ -125,13 +124,12 @@ extension Reactive where Base == DataStack {
                         return object
                     },
                     success: { (object) in
-                        
-                        observable.onNext(object.flatMap(self.base.fetchExisting))
-                        observable.onCompleted()
+
+                        observable(.success(object.flatMap(self.base.fetchExisting)))
                     },
                     failure: { (error) in
-                        
-                        observable.onError(error)
+
+                        observable(.error(error))
                     }
                 )
                 return Disposables.create()
@@ -148,24 +146,24 @@ extension Reactive where Base == DataStack {
              source: ["name": "John", "age": 30]
          )
          .subscribe(
-             onNext: { (person) in
+             onSuccess: { (person) in
                  XCTAssertEqual(person?.age, 30)
                   ...
              },
-                 onError: { (error) in
+             onError: { (error) in
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - returns: An `Observable` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
+     - returns: A `Single` for the imported object. The observable element, if not `nil`, will be the object instance correctly associated for the `DataStack`.
      */
-    public func importUniqueObject<T: DynamicObject & ImportableUniqueObject>(_ into: Into<T>, source: T.ImportSource) -> Observable<T?> {
+    public func importUniqueObject<T: DynamicObject & ImportableUniqueObject>(_ into: Into<T>, source: T.ImportSource) -> Single<T?> {
         
-        return Observable<T?>.create(
-            { (observable) -> Disposable in
+        return Single<T?>.create(
+            subscribe: { (observable) -> Disposable in
                 
                 self.base.perform(
                     asynchronous: { (transaction) -> T? in
@@ -177,12 +175,11 @@ extension Reactive where Base == DataStack {
                     },
                     success: { (object) in
                         
-                        observable.onNext(object.flatMap(self.base.fetchExisting))
-                        observable.onCompleted()
+                        observable(.success(object.flatMap(self.base.fetchExisting)))
                     },
                     failure: { (error) in
-                        
-                        observable.onError(error)
+
+                        observable(.error(error))
                     }
                 )
                 return Disposables.create()
@@ -203,7 +200,7 @@ extension Reactive where Base == DataStack {
              ]
          )
          .subscribe(
-             onNext: { (people) in
+             onSuccess: { (people) in
                  XCTAssertEqual(people.count, 3)
                  // ...
              },
@@ -211,21 +208,21 @@ extension Reactive where Base == DataStack {
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - Warning: If `sourceArray` contains multiple import sources with same ID, no merging will occur and ONLY THE LAST duplicate will be imported.
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
      - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
-     - returns: An `Observable` for the imported objects. The observable element will be the object instances correctly associated for the `DataStack`.
+     - returns: A `Single` for the imported objects. The observable element will be the object instances correctly associated for the `DataStack`.
      */
     public func importUniqueObjects<T: DynamicObject & ImportableUniqueObject, S: Sequence>(
         _ into: Into<T>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) -> Observable<[T]> where S.Iterator.Element == T.ImportSource {
+        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) -> Single<[T]> where S.Iterator.Element == T.ImportSource {
         
-        return Observable<[T]>.create(
-            { (observable) -> Disposable in
+        return Single<[T]>.create(
+            subscribe: { (observable) -> Disposable in
                 
                 self.base.perform(
                     asynchronous: { (transaction) -> [T] in
@@ -237,13 +234,12 @@ extension Reactive where Base == DataStack {
                         )
                     },
                     success: { (objects) in
-                        
-                        observable.onNext(self.base.fetchExisting(objects))
-                        observable.onCompleted()
+
+                        observable(.success(self.base.fetchExisting(objects)))
                     },
                     failure: { (error) in
-                        
-                        observable.onError(error)
+
+                        observable(.error(error))
                     }
                 )
                 return Disposables.create()
@@ -263,7 +259,7 @@ extension Reactive where Base == DataStack {
              }
          )
          .subscribe(
-             onNext: {
+             onSuccess: {
                  let inserted = dataStack.fetchExisting($0.inserted)
                  let deleted = dataStack.fetchExisting($0.deleted)
                  // ...
@@ -272,26 +268,25 @@ extension Reactive where Base == DataStack {
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter task: the asynchronous closure where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: An `Observable` whose element will be the value returned from the `task` closure.
+     - returns: A `Single` whose element will be the value returned from the `task` closure.
      */
-    public func perform<T>(asynchronous: @escaping (AsynchronousDataTransaction) throws -> T) -> Observable<T> {
+    public func perform<T>(asynchronous: @escaping (AsynchronousDataTransaction) throws -> T) -> Single<T> {
         
-        return Observable<T>.create(
-            { (observable) -> Disposable in
+        return Single<T>.create(
+            subscribe: { (observable) -> Disposable in
                 
                 self.base.perform(
                     asynchronous: asynchronous,
                     success: { (output) in
                         
-                        observable.onNext(output)
-                        observable.onCompleted()
+                        observable(.success(output))
                     },
                     failure: { (error) in
                         
-                        observable.onError(error)
+                        observable(.error(error))
                     }
                 )
                 return Disposables.create()

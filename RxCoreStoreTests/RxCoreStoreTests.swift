@@ -83,27 +83,22 @@ class RxCoreStoreTests: XCTestCase {
                 onNext: { (progress) in
                     
                     print("======= Progress: \(progress.fractionCompleted * 100) %")
+                    setupExpectation.fulfill()
                 },
                 onError: { (error) in
                     
                     XCTFail(error.localizedDescription)
-                },
-                onCompleted: { 
-                    
-                    setupExpectation.fulfill()
                 }
             )
             .disposed(by: self.disposeBag)
         
         let changeExpectation = self.expectation(description: "change")
-        let monitor = CoreStore.rx
-            .monitorList(
-                From<Dog>()
-                    .orderBy(.ascending(\.nickname))
-            )
-            .share()
+        let monitor = CoreStore.rx.monitorList(
+            From<Dog>()
+                .orderBy(.ascending(\.nickname))
+        )
         monitor
-            .subscribe(
+            .emit(
                 onNext: { (change) in
                     
                     switch change.tuple {
@@ -115,10 +110,6 @@ class RxCoreStoreTests: XCTestCase {
                     default:
                         break
                     }
-                },
-                onError: { (error) in
-                    
-                    XCTFail(error.localizedDescription)
                 }
             )
             .disposed(by: self.disposeBag)
@@ -158,7 +149,7 @@ class RxCoreStoreTests: XCTestCase {
                 }
             )
             .subscribe(
-                onNext: { (person) in
+                onSuccess: { (person) in
                     
                     let validPerson = CoreStore.fetchExisting(person)
                     XCTAssertNotNil(validPerson)
@@ -184,7 +175,7 @@ class RxCoreStoreTests: XCTestCase {
                 ]
             )
             .subscribe(
-                onNext: { (people) in
+                onSuccess: { (people) in
                     
                     XCTAssertEqual(people.count, 3)
                     XCTAssertEqual(Set(people.map({ $0.name.value })), Set(["John", "Bob", "Joe"]))
@@ -199,12 +190,4 @@ class RxCoreStoreTests: XCTestCase {
         
         self.waitForExpectations(timeout: 10, handler: nil)
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }

@@ -24,243 +24,226 @@
 //
 
 import CoreStore
+import RxCocoa
 import RxSwift
 
 
 // MARK: - Reactive
 
-public extension Reactive where Base == DataStack {
+extension Reactive where Base == DataStack {
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorList(
-             From<Person>(),
-             Where("age >= 30")
-         )
-         .share()
+     let listObserver = dataStack.rx.monitorList(
+         From<Person>().where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Signal<RxListChange<D>> {
         
         return self.monitorList(from, fetchClauses)
     }
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorList(
-             From<Person>(),
-             Where("age >= 30")
-         )
-         .share()
+     let listObserver = dataStack.rx.monitorList(
+         From<Person>().where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Signal<RxListChange<D>> {
         
-        return self.base.monitorList(from, fetchClauses).asObservable()
+        return self.base.monitorList(from, fetchClauses).asSignal(onErrorSignalWith: .never())
     }
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorList(From<Person>().where(\.age >= 30))
-         .share()
+     let listObserver = dataStack.rx.monitorList(
+         From<Person>().where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter clauseChain: a fetch chain created from a `From` clause.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> Observable<RxListChange<B.ObjectType>>{
+    public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> Signal<RxListChange<B.ObjectType>>{
         
         return self.monitorList(clauseChain.from, clauseChain.fetchClauses)
     }
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorSectionedList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorSectionedList(
-             From<Person>(),
-             SectionBy("age"),
-             Where("age >= 30")
-         )
-         .share()
+     let listObserver = dataStack.rx.monitorSectionedList(
+         From<Person>()
+             .sectionBy(\.age)
+             .where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> Signal<RxListChange<D>> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorSectionedList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorSectionedList(
-             From<Person>(),
-             SectionBy("age"),
-             Where("age >= 30")
-         )
-         .share()
+     let listObserver = dataStack.rx.monitorSectionedList(
+         From<Person>()
+             .sectionBy(\.age)
+             .where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> Observable<RxListChange<D>> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> Signal<RxListChange<D>> {
         
-        return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asObservable()
+        return self.base.monitorSectionedList(from, sectionBy, fetchClauses).asSignal(onErrorSignalWith: .never())
     }
     
     /**
      Reactive extension for `CoreStore.DataStack`'s `monitorSectionedList(...)` API. Creates an observable that wraps a `ListMonitor` that satisfies the specified fetch clauses. Multiple subscriptions be notified when changes are made to the list. The observable element will contain an `RxListChange` value.
-     - Note: If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
      ```
-     let listObserver = dataStack.rx
-         .monitorSectionedList(
-             From<Person>()
-                 .sectionBy(\.age),
-             .   .where(\.age >= 30)
-         )
-         .share()
+     let listObserver = dataStack.rx.monitorSectionedList(
+         From<Person>()
+             .sectionBy(\.age),
+             .where(\.age >= 30)
+     )
      
      listObserver.
-         .subscribe(
+         .emit(
              onNext: { (change) in
                  if case .listDidChange = change.changeType {
                      tableView.reloadData()
                  }
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      
      listObserver.
          .filterListDidChange()
-         .subscribe(
+         .emit(
              onNext: { _ in
                  tableView.reloadData()
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter clauseChain: a fetch chain created from a `From` clause.
-     - returns: An `Observable` for changes in the list. If multiple subscriptions need to share the same `ListMonitor`, it is recommended that the `Observable` returned from this method be shared using `RxSwift`'s `Observable.share()` method.
+     - returns: A `Signal` for changes in the list.
      */
-    public func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> Observable<RxListChange<B.ObjectType>> {
+    public func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> Signal<RxListChange<B.ObjectType>> {
         
         return self.monitorSectionedList(
             clauseChain.from,

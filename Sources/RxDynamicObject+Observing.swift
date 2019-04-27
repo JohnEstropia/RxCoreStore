@@ -24,22 +24,23 @@
 //
 
 import CoreStore
+import RxCocoa
 import RxSwift
 
 
-// MARK: - Reactive
+// MARK: - Reactive where Base: NSManagedObject
 
-public extension Reactive where Base: NSManagedObject {
+extension Reactive where Base: NSManagedObject {
     
-    public func monitorObject() -> Observable<RxObjectChange<Base>> {
+    public func monitorObject() -> Signal<RxObjectChange<Base>> {
         
         switch self.base.fetchSource() {
             
         case let dataStack as DataStack:
-            return dataStack.monitorObject(self.base).asObservable()
+            return dataStack.monitorObject(self.base).asSignal(onErrorSignalWith: .never())
             
         case let transaction as UnsafeDataTransaction:
-            return transaction.monitorObject(self.base).asObservable()
+            return transaction.monitorObject(self.base).asSignal(onErrorSignalWith: .never())
             
         default:
             return .empty()
@@ -47,17 +48,20 @@ public extension Reactive where Base: NSManagedObject {
     }
 }
 
-public extension Reactive where Base: CoreStoreObject {
+
+// MARK: - Reactive where Base: CoreStoreObject
+
+extension Reactive where Base: CoreStoreObject {
     
-    public func monitorObject() -> Observable<RxObjectChange<Base>> {
+    public func monitorObject() -> Signal<RxObjectChange<Base>> {
         
         switch self.base.fetchSource() {
             
         case let dataStack as DataStack:
-            return dataStack.monitorObject(self.base).asObservable()
+            return dataStack.monitorObject(self.base).asSignal(onErrorSignalWith: .never())
             
         case let transaction as UnsafeDataTransaction:
-            return transaction.monitorObject(self.base).asObservable()
+            return transaction.monitorObject(self.base).asSignal(onErrorSignalWith: .never())
             
         default:
             return .empty()

@@ -43,18 +43,18 @@ extension Reactive where Base == DataStack {
              onError: { (error) in
                  // ...
              },
-             onCompleted: {
+             onSuccess: { (dataStack, storage) in
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter storage: the storage
-     - returns: An `Observable<StorageInterface>` type. Note that the `StorageInterface` element of the observable may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
+     - returns: An `Observable<RxStorageProgressType>` type. Note that the `StorageInterface` element of the observable may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface>(_ storage: T) -> Observable<T> {
+    public func addStorage<T: StorageInterface>(_ storage: T) -> Observable<DataStack.RxStorageProgress<T>> {
         
-        return Observable.create(
+        return Observable<DataStack.RxStorageProgress<T>>.create(
             { (observable) -> Disposable in
                 
                 self.base.addStorage(
@@ -64,7 +64,7 @@ extension Reactive where Base == DataStack {
                         switch result {
                             
                         case .success(let storage):
-                            observable.onNext(storage)
+                            observable.onNext(DataStack.RxStorageProgress(storage: storage, progress: nil, isCompleted: true))
                             observable.onCompleted()
                             
                         case .failure(let error):
@@ -98,7 +98,7 @@ extension Reactive where Base == DataStack {
                  // ...
              }
          )
-         .addDisposableTo(disposeBag)
+         .disposed(by: disposeBag)
      ```
      - parameter storage: the local storage
      - returns: An `Observable<RxStorageProgressType>` type. Note that the `LocalStorage` associated to the `RxStorageProgressType` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
@@ -184,7 +184,7 @@ public protocol RxStorageProgressType {
 
 // MARK: - DataStack
 
-public extension DataStack {
+extension DataStack {
     
     // MARK: - RxStorageProgress
     
@@ -223,7 +223,7 @@ public extension DataStack {
 }
 
 
-// MARK: - ObservableType
+// MARK: - ObservableType where E: RxStorageProgressType, E.StorageType: LocalStorage
 
 extension ObservableType where E: RxStorageProgressType, E.StorageType: LocalStorage {
     

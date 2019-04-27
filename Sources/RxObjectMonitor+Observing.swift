@@ -27,6 +27,8 @@ import CoreStore
 import RxSwift
 
 
+// MARK: - RxObjectMonitorType
+
 public protocol RxObjectMonitorType {
     
     associatedtype ObjectType: DynamicObject
@@ -60,6 +62,8 @@ extension ObjectMonitor: ObservableConvertibleType {
     }
 }
 
+
+// MARK: - RxObjectChangeType
 
 public protocol RxObjectChangeType {
     
@@ -115,46 +119,46 @@ public struct RxObjectChange<D: DynamicObject>: RxObjectChangeType {
 }
 
 
-// MARK: - ObservableType
+// MARK: - PrimitiveSequence where Trait == SingleTrait, Element: RxObjectChangeType
 
-extension ObservableType where E: RxObjectChangeType {
+extension PrimitiveSequence where Trait == SingleTrait, Element: RxObjectChangeType {
     
     public typealias ObjectMonitorType = ObjectMonitor<E.ObjectType>
     public typealias ObjectChangeType = RxObjectChange<E.ObjectType>.ChangeType
     
-    public func filterObjectWillUpdate() -> Observable<E.ObjectType> {
+    public func filterObjectWillUpdate() -> Single<E.ObjectType> {
         
-        return self.flatMap { (objectChange) -> Observable<E.ObjectType> in
+        return self.flatMap { (objectChange) -> Single<E.ObjectType> in
             
             if case .objectWillUpdate(let object) = objectChange.changeType {
                 
                 return .just(object)
             }
-            return .empty()
+            return .never()
         }
     }
     
-    public func filterObjectDidUpdate() -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
+    public func filterObjectDidUpdate() -> Single<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
         
-        return self.flatMap { (objectChange) -> Observable<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
+        return self.flatMap { (objectChange) -> Single<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
             
             if case .objectDidUpdate(let object, let changedPersistentKeys) = objectChange.changeType {
                 
                 return .just((object, changedPersistentKeys))
             }
-            return .empty()
+            return .never()
         }
     }
     
-    public func filterObjectDeleted() -> Observable<Void> {
+    public func filterObjectDeleted() -> Single<Void> {
         
-        return self.flatMap { (objectChange) -> Observable<Void> in
+        return self.flatMap { (objectChange) -> Single<Void> in
             
             if case .objectDeleted = objectChange.changeType {
                 
                 return .just(())
             }
-            return .empty()
+            return .never()
         }
     }
 }

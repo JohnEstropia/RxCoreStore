@@ -120,16 +120,16 @@ public struct RxObjectChange<D: DynamicObject>: RxObjectChangeType {
 }
 
 
-// MARK: - SharedSequence where S == SignalSharingStrategy, Element: RxObjectChangeType
+// MARK: - SharedSequence where SharingStrategy == SignalSharingStrategy, Element: RxObjectChangeType
 
-extension SharedSequence where S == SignalSharingStrategy, Element: RxObjectChangeType {
+extension SharedSequence where SharingStrategy == SignalSharingStrategy, Element: RxObjectChangeType {
     
-    public typealias ObjectMonitorType = ObjectMonitor<E.ObjectType>
-    public typealias ObjectChangeType = RxObjectChange<E.ObjectType>.ChangeType
+    public typealias ObjectMonitorType = ObjectMonitor<Element.ObjectType>
+    public typealias ObjectChangeType = RxObjectChange<Element.ObjectType>.ChangeType
     
-    public func filterObjectWillUpdate() -> Signal<E.ObjectType> {
+    public func filterObjectWillUpdate() -> Signal<Element.ObjectType> {
         
-        return self.flatMap { (objectChange) -> Signal<E.ObjectType> in
+        return self.flatMap { (objectChange) -> Signal<Element.ObjectType> in
             
             if case .objectWillUpdate(let object) = objectChange.changeType {
                 
@@ -139,9 +139,9 @@ extension SharedSequence where S == SignalSharingStrategy, Element: RxObjectChan
         }
     }
     
-    public func filterObjectDidUpdate() -> Signal<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
+    public func filterObjectDidUpdate() -> Signal<(object: Element.ObjectType, changedPersistentKeys: Set<KeyPathString>)> {
         
-        return self.flatMap { (objectChange) -> Signal<(object: E.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
+        return self.flatMap { (objectChange) -> Signal<(object: Element.ObjectType, changedPersistentKeys: Set<KeyPathString>)> in
             
             if case .objectDidUpdate(let object, let changedPersistentKeys) = objectChange.changeType {
                 

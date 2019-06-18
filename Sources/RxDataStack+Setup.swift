@@ -223,9 +223,9 @@ extension DataStack {
 }
 
 
-// MARK: - ObservableType where E: RxStorageProgressType, E.StorageType: LocalStorage
+// MARK: - ObservableType where Element: RxStorageProgressType, Element.StorageType: LocalStorage
 
-extension ObservableType where E: RxStorageProgressType, E.StorageType: LocalStorage {
+extension ObservableType where Element: RxStorageProgressType, Element.StorageType: LocalStorage {
     
     /**
      Filters an `Observable<RxStorageProgressType>` to send events only for `Progress` elements, which is sent only when a migration is required. This observable will not fire `onNext` events if no migration is required.

@@ -29,7 +29,7 @@ import RxSwift
 
 // MARK: - CoreStore
 
-public extension CoreStore {
+extension CoreStore {
     
     /**
      Reactive extensions for the `defaultStack`. 

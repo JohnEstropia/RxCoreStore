@@ -132,9 +132,9 @@ public struct RxListChange<D: DynamicObject>: RxListChangeType {
 }
 
 
-// MARK: - SharedSequence where S == SignalSharingStrategy, Element: RxListChangeType
+// MARK: - SharedSequence where SharingStrategy == SignalSharingStrategy, Element: RxListChangeType
 
-extension SharedSequence where S == SignalSharingStrategy, Element: RxListChangeType {
+extension SharedSequence where SharingStrategy == SignalSharingStrategy, Element: RxListChangeType {
     
     public typealias ListMonitorType = ListMonitor<Element.ObjectType>
     public typealias ListChangeType = RxListChange<Element.ObjectType>.ChangeType
@@ -187,9 +187,9 @@ extension SharedSequence where S == SignalSharingStrategy, Element: RxListChange
         }
     }
     
-    public func filterObjectInserted() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> {
+    public func filterObjectInserted() -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, toIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, toIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, toIndexPath: IndexPath)> in
             
             if case .objectInserted(let object, let indexPath) = listChange.changeType {
                 
@@ -199,9 +199,9 @@ extension SharedSequence where S == SignalSharingStrategy, Element: RxListChange
         }
     }
     
-    public func filterObjectDeleted() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> {
+    public func filterObjectDeleted() -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, fromIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, fromIndexPath: IndexPath)> in
             
             if case .objectDeleted(let object, let indexPath) = listChange.changeType {
                 
@@ -211,9 +211,9 @@ extension SharedSequence where S == SignalSharingStrategy, Element: RxListChange
         }
     }
     
-    public func filterObjectUpdated() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> {
+    public func filterObjectUpdated() -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, atIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, atIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, atIndexPath: IndexPath)> in
             
             if case .objectUpdated(let object, let indexPath) = listChange.changeType {
                 
@@ -223,9 +223,9 @@ extension SharedSequence where S == SignalSharingStrategy, Element: RxListChange
         }
     }
     
-    public func filterObjectMoved() -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> {
+    public func filterObjectMoved() -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> {
         
-        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: E.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> in
+        return self.flatMap { (listChange) -> Signal<(monitor: ListMonitorType, object: Element.ObjectType, fromIndexPath: IndexPath, toIndexPath: IndexPath)> in
             
             if case .objectMoved(let object, let fromIndexPath, let toIndexPath) = listChange.changeType {
                 

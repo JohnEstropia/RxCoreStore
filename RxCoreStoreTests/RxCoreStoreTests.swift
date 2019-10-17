@@ -54,7 +54,7 @@ class RxCoreStoreTests: XCTestCase {
     
     func testExample() {
         
-        CoreStore.defaultStack = DataStack(
+        Shared.defaultStack = DataStack(
             CoreStoreSchema(
                 modelVersion: "V1",
                 entities: [
@@ -70,7 +70,7 @@ class RxCoreStoreTests: XCTestCase {
             )
         )
         let setupExpectation = self.expectation(description: "setup")
-        CoreStore.rx
+        Shared.defaultStack.rx
             .addStorage(
                 SQLiteStore(
                     fileURL: SQLiteStore.defaultRootDirectory
@@ -93,7 +93,7 @@ class RxCoreStoreTests: XCTestCase {
             .disposed(by: self.disposeBag)
         
         let changeExpectation = self.expectation(description: "change")
-        let monitor = CoreStore.rx.monitorList(
+        let monitor = Shared.defaultStack.rx.monitorList(
             From<Dog>()
                 .orderBy(.ascending(\.nickname))
         )
@@ -115,7 +115,7 @@ class RxCoreStoreTests: XCTestCase {
             .disposed(by: self.disposeBag)
         
         let transactionExpectation = self.expectation(description: "transaction")
-        CoreStore.rx
+        Shared.defaultStack.rx
             .perform(
                 asynchronous: { (transaction) -> Person in
                     
@@ -151,7 +151,7 @@ class RxCoreStoreTests: XCTestCase {
             .subscribe(
                 onSuccess: { (person) in
                     
-                    let validPerson = CoreStore.fetchExisting(person)
+                    let validPerson = Shared.defaultStack.fetchExisting(person)
                     XCTAssertNotNil(validPerson)
                     XCTAssertNotNil(validPerson?.pet.value)
                     
@@ -165,7 +165,7 @@ class RxCoreStoreTests: XCTestCase {
             .disposed(by: self.disposeBag)
         
         let importExpectation = self.expectation(description: "import")
-        CoreStore.rx
+        Shared.defaultStack.rx
             .importUniqueObjects(
                 Into<Person>(),
                 sourceArray: [

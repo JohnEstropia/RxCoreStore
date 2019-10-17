@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "RxCoreStore"
-    s.version = "1.4.0"
+    s.version = "2.0.0"
     s.license = "MIT"
     s.summary = "RxSwift extensions for CoreStore"
     s.homepage = "https://github.com/JohnEstropia/RxCoreStore"
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.dependency "CoreStore", "~> 6.0"
-    s.dependency "RxCocoa", "~> 5.0"
-    s.dependency "RxSwift", "~> 5.0"
+    s.dependency "CoreStore", ">=6.0"
+    s.dependency "RxCocoa", ">=5.0"
+    s.dependency "RxSwift", ">=5.0"
 end

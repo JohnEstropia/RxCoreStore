@@ -44,11 +44,11 @@ extension ObjectMonitor: ObservableConvertibleType {
     
     // MARK: ObservableConvertibleType
     
-    public typealias E = RxObjectChange<D>
+    public typealias E = RxObjectChange<O>
     
-    public func asObservable() -> Observable<RxObjectChange<D>> {
+    public func asObservable() -> Observable<RxObjectChange<O>> {
         
-        return Observable<RxObjectChange<D>>
+        return Observable<RxObjectChange<O>>
             .create(
                 { (observable) in
                     

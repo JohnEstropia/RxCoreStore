@@ -29,6 +29,7 @@ import RxSwift
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CoreStore {
     
     /**
@@ -36,8 +37,8 @@ extension CoreStore {
      */
     public static var rx: Reactive<DataStack> {
         
-        get { return self.defaultStack.rx }
-        set { self.defaultStack.rx = newValue }
+        get { return Shared.defaultStack.rx }
+        set { Shared.defaultStack.rx = newValue }
     }
 }
 

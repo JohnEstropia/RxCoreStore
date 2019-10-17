@@ -49,7 +49,7 @@ extension DataStack: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias CompatibleType = DataStack
+    public typealias ReactiveBase = DataStack
 }
 
 
@@ -59,7 +59,7 @@ extension ListMonitor: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias CompatibleType = ListMonitor
+    public typealias ReactiveBase = ListMonitor
 }
 
 
@@ -69,7 +69,27 @@ extension ObjectMonitor: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias CompatibleType = ObjectMonitor
+    public typealias ReactiveBase = ObjectMonitor
+}
+
+
+// MARK: - LiveList
+
+extension LiveList: ReactiveCompatible {
+    
+    // MARK: ReactiveCompatible
+    
+    public typealias ReactiveBase = LiveList
+}
+
+
+// MARK: - LiveObject
+
+extension LiveObject: ReactiveCompatible {
+    
+    // MARK: ReactiveCompatible
+    
+    public typealias ReactiveBase = LiveObject
 }
 
 
@@ -79,5 +99,5 @@ extension CoreStoreObject: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias CompatibleType = CoreStoreObject
+    public typealias ReactiveBase = CoreStoreObject
 }

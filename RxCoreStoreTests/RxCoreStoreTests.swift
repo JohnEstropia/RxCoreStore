@@ -54,7 +54,7 @@ class RxCoreStoreTests: XCTestCase {
     
     func testExample() {
         
-        Shared.defaultStack = DataStack(
+        CoreStoreDefaults.dataStack = DataStack(
             CoreStoreSchema(
                 modelVersion: "V1",
                 entities: [
@@ -70,7 +70,7 @@ class RxCoreStoreTests: XCTestCase {
             )
         )
         let setupExpectation = self.expectation(description: "setup")
-        Shared.defaultStack.rx
+        CoreStoreDefaults.dataStack.rx
             .addStorage(
                 SQLiteStore(
                     fileURL: SQLiteStore.defaultRootDirectory
@@ -92,8 +92,8 @@ class RxCoreStoreTests: XCTestCase {
             )
             .disposed(by: self.disposeBag)
         
-        let changeExpectation = self.expectation(description: "change")
-        let monitor = Shared.defaultStack.rx.monitorList(
+        let monitorChangeExpectation = self.expectation(description: "monitorChange")
+        let monitor = CoreStoreDefaults.dataStack.rx.monitorList(
             From<Dog>()
                 .orderBy(.ascending(\.nickname))
         )
@@ -105,7 +105,7 @@ class RxCoreStoreTests: XCTestCase {
                         
                     case (let monitor, .listDidChange):
                         XCTAssertEqual(monitor.numberOfObjects(), 1)
-                        changeExpectation.fulfill()
+                        monitorChangeExpectation.fulfill()
                         
                     default:
                         break
@@ -113,9 +113,24 @@ class RxCoreStoreTests: XCTestCase {
                 }
             )
             .disposed(by: self.disposeBag)
+
+        let publisherChangeExpectation = self.expectation(description: "publisherChange")
+        let publisher = CoreStoreDefaults.dataStack.listPublisher(
+            From<Dog>()
+                .orderBy(.ascending(\.nickname))
+        )
+        publisher.rx.snapshotSignal()
+            .emit(
+                onNext: { (snapshot) in
+
+                    XCTAssertEqual(snapshot.numberOfItems, 1)
+                    publisherChangeExpectation.fulfill()
+                }
+            )
+            .disposed(by: self.disposeBag)
         
         let transactionExpectation = self.expectation(description: "transaction")
-        Shared.defaultStack.rx
+        CoreStoreDefaults.dataStack.rx
             .perform(
                 asynchronous: { (transaction) -> Person in
                     
@@ -151,7 +166,7 @@ class RxCoreStoreTests: XCTestCase {
             .subscribe(
                 onSuccess: { (person) in
                     
-                    let validPerson = Shared.defaultStack.fetchExisting(person)
+                    let validPerson = CoreStoreDefaults.dataStack.fetchExisting(person)
                     XCTAssertNotNil(validPerson)
                     XCTAssertNotNil(validPerson?.pet.value)
                     
@@ -165,7 +180,7 @@ class RxCoreStoreTests: XCTestCase {
             .disposed(by: self.disposeBag)
         
         let importExpectation = self.expectation(description: "import")
-        Shared.defaultStack.rx
+        CoreStoreDefaults.dataStack.rx
             .importUniqueObjects(
                 Into<Person>(),
                 sourceArray: [

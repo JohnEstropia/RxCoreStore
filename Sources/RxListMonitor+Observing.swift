@@ -44,11 +44,11 @@ extension ListMonitor: ObservableConvertibleType {
     
     // MARK: ObservableConvertibleType
     
-    public typealias E = RxListChange<D>
+    public typealias E = RxListChange<O>
     
-    public func asObservable() -> Observable<RxListChange<D>> {
+    public func asObservable() -> Observable<RxListChange<O>> {
         
-        return Observable<RxListChange<D>>
+        return Observable<RxListChange<O>>
             .create(
                 { (observable) in
                     

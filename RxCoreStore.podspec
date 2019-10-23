@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.dependency "CoreStore", ">=6.0"
+    s.dependency "CoreStore", ">=7.0"
     s.dependency "RxCocoa", ">=5.0"
     s.dependency "RxSwift", ">=5.0"
 end

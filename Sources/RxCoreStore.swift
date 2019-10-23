@@ -37,8 +37,8 @@ extension CoreStore {
      */
     public static var rx: Reactive<DataStack> {
         
-        get { return Shared.defaultStack.rx }
-        set { Shared.defaultStack.rx = newValue }
+        get { return CoreStoreDefaults.dataStack.rx }
+        set { CoreStoreDefaults.dataStack.rx = newValue }
     }
 }
 
@@ -73,23 +73,23 @@ extension ObjectMonitor: ReactiveCompatible {
 }
 
 
-// MARK: - LiveList
+// MARK: - ListPublisher
 
-extension LiveList: ReactiveCompatible {
+extension ListPublisher: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias ReactiveBase = LiveList
+    public typealias ReactiveBase = ListPublisher
 }
 
 
-// MARK: - LiveObject
+// MARK: - ObjectPublisher
 
-extension LiveObject: ReactiveCompatible {
+extension ObjectPublisher: ReactiveCompatible {
     
     // MARK: ReactiveCompatible
     
-    public typealias ReactiveBase = LiveObject
+    public typealias ReactiveBase = ObjectPublisher
 }
 
 

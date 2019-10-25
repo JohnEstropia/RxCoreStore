@@ -115,7 +115,7 @@ class RxCoreStoreTests: XCTestCase {
             .disposed(by: self.disposeBag)
 
         let publisherChangeExpectation = self.expectation(description: "publisherChange")
-        let publisher = CoreStoreDefaults.dataStack.listPublisher(
+        let publisher = CoreStoreDefaults.dataStack.publishList(
             From<Dog>()
                 .orderBy(.ascending(\.nickname))
         )

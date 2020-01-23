@@ -58,7 +58,7 @@ extension ObjectMonitor: ObservableConvertibleType {
 
                         DispatchQueue.main.async {
 
-                            self.removeObserver(token)
+                            self.removeObserver(observer)
                         }
                     }
                 }

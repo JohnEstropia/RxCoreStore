@@ -60,7 +60,10 @@ extension Reactive where Base: RxObjectPublisherType {
                     }
                     return Disposables.create {
 
-                        self.base.removeObserver(token)
+                        DispatchQueue.main.async {
+
+                            self.base.removeObserver(token)
+                        }
                     }
                 }
             )
@@ -81,7 +84,10 @@ extension Reactive where Base: RxObjectPublisherType {
                     }
                     return Disposables.create {
 
-                        self.base.removeObserver(token)
+                        DispatchQueue.main.async {
+
+                            self.base.removeObserver(token)
+                        }
                     }
                 }
             )

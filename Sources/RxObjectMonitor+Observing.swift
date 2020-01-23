@@ -55,8 +55,11 @@ extension ObjectMonitor: ObservableConvertibleType {
                     let observer = RxAnonymousObjectObserver(observable)
                     self.addObserver(observer)
                     return Disposables.create {
-                        
-                        self.removeObserver(observer)
+
+                        DispatchQueue.main.async {
+
+                            self.removeObserver(token)
+                        }
                     }
                 }
         )

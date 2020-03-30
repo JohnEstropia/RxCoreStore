@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
     s.source = { :git => "https://github.com/JohnEstropia/RxCoreStore.git", :tag => s.version.to_s }
 
     s.ios.deployment_target = "10.0"
+    s.swift_versions = "5.2"
 
     s.source_files = "Sources", "Sources/**/*.{swift,h,m}"
     s.public_header_files = "Sources/**/*.h"

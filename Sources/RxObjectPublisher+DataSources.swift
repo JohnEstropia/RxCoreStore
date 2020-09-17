@@ -36,7 +36,11 @@ public protocol RxObjectPublisherType {
 
     var snapshot: ObjectSnapshot<ObjectType>? { get }
 
-    func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (ObjectPublisher<ObjectType>) -> Void)
+    func addObserver<T: AnyObject>(
+        _ observer: T,
+        notifyInitial: Bool,
+        _ callback: @escaping (ObjectPublisher<ObjectType>) -> Void
+    )
     func removeObserver<T: AnyObject>(_ observer: T)
 }
 
@@ -54,7 +58,7 @@ extension Reactive where Base: RxObjectPublisherType {
                 { observer in
 
                     let token = NSObject()
-                    self.base.addObserver(token) { (objectPublisher) in
+                    self.base.addObserver(token, notifyInitial: true) { (objectPublisher) in
 
                         observer.onNext(objectPublisher.snapshot)
                     }
@@ -67,7 +71,6 @@ extension Reactive where Base: RxObjectPublisherType {
                     }
                 }
             )
-            .startWith(self.base.snapshot)
             .asDriver(onErrorDriveWith: .never())
     }
 
@@ -78,7 +81,7 @@ extension Reactive where Base: RxObjectPublisherType {
                 { observer in
 
                     let token = NSObject()
-                    self.base.addObserver(token) { (objectPublisher) in
+                    self.base.addObserver(token, notifyInitial: false) { (objectPublisher) in
 
                         observer.onNext(objectPublisher.snapshot)
                     }

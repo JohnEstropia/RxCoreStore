@@ -44,7 +44,7 @@ let package = Package(
     dependencies: [
         .Package(
             url: "https://github.com/JohnEstropia/CoreStore.git",
-            "7.1.0"
+            "7.3.0"
         ),
         .Package(
             url: "https://github.com/ReactiveX/RxSwift.git",

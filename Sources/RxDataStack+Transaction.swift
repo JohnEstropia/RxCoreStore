@@ -73,7 +73,7 @@ extension Reactive where Base == DataStack {
                     },
                     failure: { (error) in
                         
-                        observable(.error(error))
+                        observable(.failure(error))
                     }
                 )
                 return Disposables.create()
@@ -129,7 +129,7 @@ extension Reactive where Base == DataStack {
                     },
                     failure: { (error) in
 
-                        observable(.error(error))
+                        observable(.failure(error))
                     }
                 )
                 return Disposables.create()
@@ -179,7 +179,7 @@ extension Reactive where Base == DataStack {
                     },
                     failure: { (error) in
 
-                        observable(.error(error))
+                        observable(.failure(error))
                     }
                 )
                 return Disposables.create()
@@ -239,7 +239,7 @@ extension Reactive where Base == DataStack {
                     },
                     failure: { (error) in
 
-                        observable(.error(error))
+                        observable(.failure(error))
                     }
                 )
                 return Disposables.create()
@@ -286,7 +286,7 @@ extension Reactive where Base == DataStack {
                     },
                     failure: { (error) in
                         
-                        observable(.error(error))
+                        observable(.failure(error))
                     }
                 )
                 return Disposables.create()

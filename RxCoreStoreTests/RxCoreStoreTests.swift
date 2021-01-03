@@ -172,7 +172,7 @@ class RxCoreStoreTests: XCTestCase {
                     
                     transactionExpectation.fulfill()
                 },
-                onError: { (error) in
+                onFailure: { (error) in
                     
                     XCTFail(error.localizedDescription)
                 }
@@ -196,7 +196,7 @@ class RxCoreStoreTests: XCTestCase {
                     XCTAssertEqual(Set(people.map({ $0.name.value })), Set(["John", "Bob", "Joe"]))
                     importExpectation.fulfill()
                 },
-                onError: { (error) in
+                onFailure: { (error) in
                     
                     XCTFail(error.localizedDescription)
                 }

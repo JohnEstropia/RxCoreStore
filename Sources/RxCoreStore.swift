@@ -27,22 +27,6 @@ import CoreStore
 import RxSwift
 
 
-// MARK: - CoreStore
-
-@available(*, deprecated, message: "Call methods directly from the DataStack instead")
-extension CoreStore {
-    
-    /**
-     Reactive extensions for the `defaultStack`. 
-     */
-    public static var rx: Reactive<DataStack> {
-        
-        get { return CoreStoreDefaults.dataStack.rx }
-        set { CoreStoreDefaults.dataStack.rx = newValue }
-    }
-}
-
-
 // MARK: - DataStack
 
 extension DataStack: ReactiveCompatible {

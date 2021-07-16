@@ -23,6 +23,7 @@
 //  SOFTWARE.
 //
 
+import CoreData
 import CoreStore
 import RxCocoa
 import RxSwift

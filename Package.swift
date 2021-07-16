@@ -1,3 +1,4 @@
+// swift-tools-version:5.4
 //
 //  Package.swift
 //  RxCoreStore
@@ -25,31 +26,32 @@
 
 import PackageDescription
 
-let targets: [Target]
-#if os(iOS)
-targets = [Target(name: "RxCoreStore iOS")]
-#elseif os(OSX)
-targets = [Target(name: "RxCoreStore OSX")]
-#elseif os(watchOS)
-targets = [Target(name: "RxCoreStore watchOS")]
-#elseif os(tvOS)
-targets = [Target(name: "RxCoreStore tvOS")]
-#else
-targets = []
-#endif
-
 let package = Package(
     name: "RxCoreStore",
-    targets: targets,
-    dependencies: [
-        .Package(
-            url: "https://github.com/JohnEstropia/CoreStore.git",
-            "7.3.0"
-        ),
-        .Package(
-            url: "https://github.com/ReactiveX/RxSwift.git",
-            "5.1.1"
-        )
+    platforms: [
+        .macOS(.v10_13), .iOS(.v11), .tvOS(.v11), .watchOS(.v4)
     ],
-    exclude: ["Carthage", "RxCoreStoreDemo", "Sources/libA/images"]
+    products: [
+        .library(name: "RxCoreStore", targets: ["RxCoreStore"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/JohnEstropia/CoreStore.git", .upToNextMajor(from: "7.0.0")),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
+    ],
+    targets: [
+        .target(
+            name: "RxCoreStore",
+            dependencies: [
+                .product(name: "CoreStore", package: "CoreStore"),
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift")
+            ],
+            path: "Sources"
+        ),
+        .testTarget(
+            name: "RxCoreStoreTests",
+            dependencies: ["RxCoreStore"],
+            path: "RxCoreStoreTests"
+        )
+    ]
 )
